@@ -6,27 +6,11 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"github.com/wapalencia/WebGO/internal"
+
 	"strings"
 	"time"
 	//"os"
 )
-
-type user struct {
-	nombre string
-	skills string
-	age    string
-}
-type allusers []user
-
-var users = allusers{
-
-	{
-		nombre: "wilfredo",
-		skills: "developer",
-		age:    "40",
-	},
-}
 
 type Tpalindrome struct {
 	Palabra     string
@@ -49,11 +33,6 @@ type TcreateSeed struct {
 	ResultSeed string
 }
 
-type ContactDetails struct {
-	name    string
-	correo  string
-	Message string
-}
 type Person struct {
 	UserName string
 }
@@ -125,7 +104,7 @@ func main() {
 func HomePage(w http.ResponseWriter, r *http.Request) {
 
 	t, err := template.ParseFiles("index.html") //parse the html file homepage.html
-	if err != nil {                             // if there is an error
+	if err != nil {                              // if there is an error
 		log.Print("template parsing error: ", err) // log it
 	}
 	err = t.Execute(w, HomePage) //execute the template and pass it the HomePageVars struct to fill in the gaps
@@ -152,7 +131,7 @@ func RecibirPage(w http.ResponseWriter, r *http.Request) {
 
 	var n string
 
-	if internal.IsPalindrome(string(r.FormValue("UserName"))) {
+	if IsPalindrome(string(r.FormValue("UserName"))) {
 		n = "Verdadro"
 	} else {
 		n = "False"
@@ -207,9 +186,8 @@ func RecibirPage2(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var vPalindrome, exitWord string
-	
 
-	if internal.IsPalindrome(string(r.FormValue("Palindrome"))) {
+	if IsPalindrome(string(r.FormValue("Palindrome"))) {
 		vPalindrome = "Verdadro"
 	} else {
 		vPalindrome = "False"
@@ -440,4 +418,18 @@ func CountSeed(arrySeed, arrWeight []string) int {
 	//fmt.Println("total sum: ", totalSum)
 
 	return totalSum + totalMult
+}
+func IsPalindrome(w string) bool {
+
+	i := 0
+	for _, item := range w {
+		i++
+		rev := item
+		ini := w[len(w)-i]
+		if string(rev) != string(ini) {
+			println("el for", string(rev), "vs cadena", string(ini))
+			return false
+		}
+	}
+	return true
 }
