@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[AYP-7122]</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid">
+          <div class="container">
+          <h4 class="display-12">Respuestas</h4>
+          <form method="POST">
+              <div id="pal">
+                <label>Palabra Palendrome:</label><br />
+                <input id="palindrome" type="text" name="Palindrome" value="{{.Palabra}}" size="80"> <br />
+                <label>Respuesta:</label><br />
+              <input type="text" name="UserName" value="{{.Ispalidrome}}"> <br />
+              </div>
+              <div id="searchword">  
+                  <h12 class="display-12">Buscar una palabras dentro de la frase...</h12>
+                  <br>
+                <label>Palabra:</label><br />
+                <input id="word" type="text" size="80" name="word" value="{{.WordStr}}"><br/>
+                <label>Frase:</label><br />
+                <input id="phrase" type="text" name="phrase" size="80" value="{{.PhraseStr}}"><br />
+                <label>Respuesta:</label><br />
+                <input id="ResponseWord" type="text" name="ResponseWord" size="80" value="{{.ResponseWord}}"><br />
+              </div>  
+              <div id="Arr">  
+                <label>obtener Arry:</label><br />
+                <input id="Arry" type="text" name="Arry" size="80" value="{{.ArryRead}}"><br />
+                <label>Respuesta Array:</label><br />
+              <input type="text" name="mensage" value="{{.ResultArry}}" size="80"><br/>
+              </div>  
+              <div id="CountSeed"> 
+                <label>Semilla:</label><br />
+                <input id="ArrySeed" type="text" name="ArrySeed" size="80" value="{{.ArrySeed}}"><br />
+                <label>Peso:</label><br />
+                <input id="ArryWeight" type="text" name="ArryWeight" size="80" value="{{.ArryWeight}}"><br />
+                <label>Respuesta:</label><br />
+                <input id="ResultSeed" type="text" name="ResultSeed" size="80" value="{{.ResultSeed}}"><br />
+              </div> 
+              <div id="btns"  class="center"> 
+                  <br>
+              <input id="btn_send" type="submit"> 
+              </div> 
+
+
+          </form>
+
+        </div>
+      </div>
+
+</body>
+
+</html>
