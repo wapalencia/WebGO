@@ -13,10 +13,12 @@
     <div class="jumbotron jumbotron-fluid">
           <div class="container">
             <h2 class="display-10">Proyeto de Algoritmo </h2>
-            <form action="/uploadfile" method="POST" >
+          <form method="POST">
               <div id="pal">
                 <label>Palabra Palendrome:</label><br />
                 <input id="palindrome" type="text" name="Palindrome" value="{{.Palabra}}" size="80"> <br />
+                <label>Respuesta:</label><br />
+              <input type="text" name="UserName" value="{{.Ispalidrome}}"> <br />
               </div>
               <div id="searchword">  
                   <h12 class="display-12">Buscar una palabras dentro de la frase...</h12>
@@ -25,21 +27,29 @@
                 <input id="word" type="text" size="80" name="word" value="{{.WordStr}}"><br/>
                 <label>Frase:</label><br />
                 <input id="phrase" type="text" name="phrase" size="80" value="{{.PhraseStr}}"><br />
+                <label>Respuesta:</label><br />
+                <input id="ResponseWord" type="text" name="ResponseWord" size="80" value="{{.ResponseWord}}"><br />
               </div>  
               <div id="Arr">  
                 <label>obtener Arry:</label><br />
                 <input id="Arry" type="text" name="Arry" size="80" value="{{.ArryRead}}"><br />
+                <label>Respuesta Array:</label><br />
+              <input type="text" name="mensage" value="{{.ResultArry}}" size="80"><br/>
               </div>  
               <div id="CountSeed"> 
                 <label>Semilla:</label><br />
                 <input id="ArrySeed" type="text" name="ArrySeed" size="80" value="{{.ArrySeed}}"><br />
                 <label>Peso:</label><br />
                 <input id="ArryWeight" type="text" name="ArryWeight" size="80" value="{{.ArryWeight}}"><br />
+                <label>Respuesta:</label><br />
+                <input id="ResultSeed" type="text" name="ResultSeed" size="80" value="{{.ResultSeed}}"><br />
               </div> 
               <div id="btns"  class="center"> 
                   <br>
               <input id="btn_send" type="submit"> 
               </div> 
+
+
           </form>
 
         </div>

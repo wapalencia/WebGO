@@ -2,40 +2,18 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"html/template"
+	"io/ioutil"
 	"log"
 	"net/http"
-
+	"os"
 	"strings"
 	"time"
-	//"os"
 )
 
-type Tpalindrome struct {
-	Palabra     string
-	Ispalidrome string
-}
-type TsearchWord struct {
-	Palabra   string
-	Frasworde string
-	ExisWord  bool
-}
-
-type TreadArry struct {
-	Arry       []string
-	ResultArry [][]string
-}
-
-type TcreateSeed struct {
-	Arry       []string
-	ResultArry []string
-	ResultSeed string
-}
-
-type Person struct {
-	UserName string
-}
+var path = "prueba.txt"
 
 type PageVariables struct {
 	Date     string
@@ -62,49 +40,99 @@ type PageResult struct {
 
 func main() {
 
+	http.HandleFunc("/upload", upload)
+	http.HandleFunc("/uploadfile", uploadFile)
 	http.HandleFunc("/Editar", EditPage)
 	http.HandleFunc("/", HomePage)
 	http.HandleFunc("/recibir", RecibirPage2)
 	http.HandleFunc("/login", login)
 	log.Fatal(http.ListenAndServe(":7777", nil))
 
-	/* 	tmpl := template.Must(template.ParseFiles("forms.html"))
+}
 
-	   	t := template.New("fieldname example")
-	   	t, _ = t.Parse("welcome {{.UserName}}!")
-	   	p := Person{UserName: "Wilfredo"}
-	   	t.Execute(os.Stdout, p)
+func upload(w http.ResponseWriter, r *http.Request) {
+	//...................................
+	//Reading into struct type from a JSON file
+	//...................................
 
-	   	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	   		if r.Method != http.MethodPost {
-	   			tmpl.Execute(w, nil)
+	var content, err = ioutil.ReadFile("Respuesta.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	user2 := PageResult{}
 
-	   			return
-	   		}
-	   		details := ContactDetails{
-	   			//name:    r.FormValue("email"),
-	   			name:    r.FormValue("name"),
-	   			correo:  r.FormValue("subject"),
-	   			Message: r.FormValue("message"),
-	   		}
+	err = json.Unmarshal(content, &user2)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Id:%d, Name:%s, Password:%s, LoggedAt:%v", user2.ResultSeed, user2.Palabra, user2.ResultArry, user2.ResultSeed)
 
-	   		// do something with details
-	   		_ = details
+	HomePageVars := PageResult{
+		Palabra:      user2.Palabra,
+		Ispalidrome:  user2.Ispalidrome,
+		ArryRead:     user2.ArryRead,
+		ResultArry:   user2.ResultArry,
+		WordStr:      user2.WordStr,
+		PhraseStr:    user2.PhraseStr,
+		ResponseWord: user2.ResponseWord,
+		ArrySeed:     user2.ArrySeed,
+		ArryWeight:   user2.ArryWeight,
+		ResultSeed:   user2.ResultSeed,
+	}
 
-	   		tmpl.Execute(w, struct{ Success bool }{true})
-	   		tmpl.Execute(w, p)
+	t, err := template.ParseFiles("./view/upload.html") //parse the html file homepage.html
+	if err != nil {                                     // if there is an error
+		log.Print("template parsing error: ", err) // log it
+	}
+	err = t.Execute(w, HomePageVars) //execute the template and pass it the HomePageVars struct to fill in the gaps
+	if err != nil {                  // if there is an error
+		log.Print("template xecuting error: ", err) //log it
+	}
+}
+func uploadFile(w http.ResponseWriter, r *http.Request) {
+	//...................................
+	//Reading into struct type from a JSON file
+	//...................................
 
-	   	})
+	var content, err = ioutil.ReadFile("Respuesta.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	user2 := PageResult{}
 
-	   	http.ListenAndServe(":8000", nil)
-	   	fmt.Println("run server: http://localhost:8000/") */
+	err = json.Unmarshal(content, &user2)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("Id:%d, Name:%s, Password:%s, LoggedAt:%v", user2.ResultSeed, user2.Palabra, user2.ResultArry, user2.ResultSeed)
 
+	HomePageVars := PageResult{
+		Palabra:      user2.Palabra,
+		Ispalidrome:  user2.Ispalidrome,
+		ArryRead:     user2.ArryRead,
+		ResultArry:   user2.ResultArry,
+		WordStr:      user2.WordStr,
+		PhraseStr:    user2.PhraseStr,
+		ResponseWord: user2.ResponseWord,
+		ArrySeed:     user2.ArrySeed,
+		ArryWeight:   user2.ArryWeight,
+		ResultSeed:   user2.ResultSeed,
+	}
+
+	t, err := template.ParseFiles("./view/uploadfile.html") //parse the html file homepage.html
+	if err != nil {                                         // if there is an error
+		log.Print("template parsing error: ", err) // log it
+	}
+	err = t.Execute(w, HomePageVars) //execute the template and pass it the HomePageVars struct to fill in the gaps
+	if err != nil {                  // if there is an error
+		log.Print("template xecuting error: ", err) //log it
+	}
 }
 
 func HomePage(w http.ResponseWriter, r *http.Request) {
 
-	t, err := template.ParseFiles("index.html") //parse the html file homepage.html
-	if err != nil {                              // if there is an error
+	t, err := template.ParseFiles("./view/index.html") //parse the html file homepage.html
+	if err != nil {                                    // if there is an error
 		log.Print("template parsing error: ", err) // log it
 	}
 	err = t.Execute(w, HomePage) //execute the template and pass it the HomePageVars struct to fill in the gaps
@@ -114,8 +142,6 @@ func HomePage(w http.ResponseWriter, r *http.Request) {
 
 }
 func RecibirPage(w http.ResponseWriter, r *http.Request) {
-	//x := []byte("conact page.")
-	//w.Write(x)
 
 	fmt.Println("method:", r.Method) //get request method
 	if r.Method == "GET" {
@@ -157,8 +183,8 @@ func RecibirPage(w http.ResponseWriter, r *http.Request) {
 		Age:      e,
 	}
 
-	t, err := template.ParseFiles("Editar.html") //parse the html file homepage.html
-	if err != nil {                              // if there is an error
+	t, err := template.ParseFiles("./view/Editar.html") //parse the html file homepage.html
+	if err != nil {                                     // if there is an error
 		log.Print("template parsing error: ", err) // log it
 	}
 	err = t.Execute(w, HomePageVars) //execute the template and pass it the HomePageVars struct to fill in the gaps
@@ -202,19 +228,9 @@ func RecibirPage2(w http.ResponseWriter, r *http.Request) {
 		exitWord = "False"
 	}
 
-	//arr := ReadArry(MySplit(string(r.FormValue("mensage"))))
 	myArrs := strings.Split(string(r.FormValue("Arry")), "")
 
-	//p := string(r.FormValue("weigth"))
-	//n := IsPalindrome(string(r.FormValue("UserName")))> 0 ? 1 : 0
-	//c := string(r.FormValue("seed"))
 	mArray := ReadArry(myArrs)
-	//fmt.Println("my split ", myArrs)
-	//e := string(r.FormValue("word"))
-	//now := time.Now()              // find the time right now
-
-	//////////////////////////////////////// Cuarto ejercicio ///////////////////////////
-	//var arrySeed, arryWeight []string
 
 	arrySeed := strings.Split(string(r.FormValue("seed")), "")
 	arryWeight := strings.Split(string(r.FormValue("weigth")), "")
@@ -233,8 +249,21 @@ func RecibirPage2(w http.ResponseWriter, r *http.Request) {
 		ResultSeed:   totSeed,
 	}
 
-	t, err := template.ParseFiles("Editar.html") //parse the html file homepage.html
-	if err != nil {                              // if there is an error
+	content, err := json.Marshal(HomePageVars)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	err = ioutil.WriteFile("Respuesta.json", content, 0644)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	crearArchivo()
+	escribeArchivo(content)
+
+	t, err := template.ParseFiles("./view/Editar.html") //parse the html file homepage.html
+	if err != nil {                                     // if there is an error
 		log.Print("template parsing error: ", err) // log it
 	}
 	err = t.Execute(w, HomePageVars) //execute the template and pass it the HomePageVars struct to fill in the gaps
@@ -263,8 +292,8 @@ func EditPage(w http.ResponseWriter, r *http.Request) {
 		Age:      e,
 	}
 
-	t, err := template.ParseFiles("Editar.html") //parse the html file homepage.html
-	if err != nil {                              // if there is an error
+	t, err := template.ParseFiles("./view/Editar.html") //parse the html file homepage.html
+	if err != nil {                                     // if there is an error
 		log.Print("template parsing error: ", err) // log it
 	}
 	err = t.Execute(w, HomePageVars) //execute the template and pass it the HomePageVars struct to fill in the gaps
@@ -285,16 +314,6 @@ func login(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("password:", r.Form["password"])
 		fmt.Println("password:", r.Form["mensage"])
 	}
-}
-
-func MySplit(str string) []string {
-	var res = make([]string, 0)
-
-	for i := 0; i < len(str); i++ {
-		res = append(res, string(str[i]))
-	}
-
-	return res
 }
 
 func ReadArry(Str []string) [][]string {
@@ -362,6 +381,11 @@ func ReadArry(Str []string) [][]string {
 }
 
 func ExistWord(str, sub string) bool {
+
+	if str == "" || sub == "" {
+		return false
+	}
+
 	if len(sub) > len(str) {
 		return false
 	}
@@ -403,11 +427,11 @@ func CountSeed(arrySeed, arrWeight []string) int {
 		}
 	}
 
-	//fmt.Println("Arreglo resultado: ", arrResult)
+	
 
 	totalSum := 0
 	totalMult := 1
-	//for i := 0; i < cap(arrResult); i++ {
+	
 	for _, x := range arrResult {
 		totalSum = totalSum + x //arrResult[i]
 		if cap(arrResult) > 0 && x != 0 && totalSum != 0 {
@@ -420,7 +444,10 @@ func CountSeed(arrySeed, arrWeight []string) int {
 	return totalSum + totalMult
 }
 func IsPalindrome(w string) bool {
+	if w == "" {
+		return false
 
+	}
 	i := 0
 	for _, item := range w {
 		i++
@@ -432,4 +459,43 @@ func IsPalindrome(w string) bool {
 		}
 	}
 	return true
+}
+func escribeArchivo(content []byte) {
+	// Abre archivo usando permisos READ & WRITE
+	var file, err = os.OpenFile(path, os.O_RDWR, 0644)
+	if existeError(err) {
+		return
+	}
+	defer file.Close()
+	// Escribe algo de texto linea por linea
+
+	_, err = file.Write(content)
+	if existeError(err) {
+		return
+	}
+	// Salva los cambios
+	err = file.Sync()
+	if existeError(err) {
+		return
+	}
+	fmt.Println("Archivo actualizado existosamente.")
+}
+func existeError(err error) bool {
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+	return (err != nil)
+}
+func crearArchivo() {
+	//Verifica que el archivo existe
+	var _, err = os.Stat(path)
+	//Crea el archivo si no existe
+	if os.IsNotExist(err) {
+		var file, err = os.Create(path)
+		if existeError(err) {
+			return
+		}
+		defer file.Close()
+	}
+	fmt.Println("Archivo creado exitosamente", path)
 }
